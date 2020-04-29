@@ -12,7 +12,6 @@ public class Model {
 	List<PowerOutage> daControllare;
 	List<PowerOutage> worstCase;
 	List<PowerOutage> parziale;
-	int totMinWorstCase;
 	int totPeopleAffectedWorstCase;
 	int maxMin;
 	int maxAnni;
@@ -72,14 +71,14 @@ public class Model {
 		this.daControllare = this.getPowerOutageDatoNERC(idNerc);
 		
 		this.worstCase = new LinkedList<PowerOutage>();
-		this.totMinWorstCase = 0;
 		this.totPeopleAffectedWorstCase = 0;
 		this.maxMin= maxOre*60;
 		this.maxAnni= maxAnni;
 		this.parziale = new LinkedList<PowerOutage>();
 		
-		return this.worstCase;
+		this.cerca(parziale, 0);
 		
+		return this.worstCase;
 	}
 	
 	public void cerca(List<PowerOutage> parziale, int livello) {
@@ -101,12 +100,11 @@ public class Model {
 		// DEI VOTI NOBEL ECC CHE SO ESATTAMENTE CHE DEVO RAGGIUNGERE UN NUMERO DI CREDITI
 		// SO SOLO CHE NON DEVO SUPERARE UN CERTO VALORE 
 		
-		// CHIEDI
-		
-		// D) se la soluzione parziale e' migliore di quella vecchia, sostituisco ed esco
-	//	if (this.getTotPeopleAffected(parziale) > )
-		
-		// algoritmo ricorsivo vero e proprio, copiato da voti nobel, da rivedere
+		// se la soluzione parziale e' migliore di quella vecchia, sostituisco
+	    if (this.getTotPeopleAffected(parziale) > this.totPeopleAffectedWorstCase) {
+	    	this.worstCase = new LinkedList<>(parziale);
+	    	this.totPeopleAffectedWorstCase = this.getTotPeopleAffected(parziale);
+	    }
 		
 		//generiamo i sotto-problemi
 		//daControllare[livello] è da aggiungere o no? Provo entrambe le cose
@@ -117,19 +115,20 @@ public class Model {
 			parziale.remove(daControllare.get(livello));
 				
 			//provo a non aggiungerlo
-			cerca(parziale, livello);
+			cerca(parziale, livello+1);
 		
 	}
 
 	private int getAnniTot(List<PowerOutage> parziale) {
 		int annoMin = 0;
 		int annoMax = 0;
-		
 		for (PowerOutage p : parziale) {
 			int annoP = p.getYear();
-			if (annoMin == 0 || annoP < annoMin)
+			if (annoMin == 0)
 				annoMin = annoP;
-			if (annoMax == 0 || annoP > annoMax)
+			if (annoP<annoMin)
+				annoMin = annoP;
+			if (annoP > annoMax)
 				annoMax = annoP;
 		}
 		
