@@ -82,7 +82,7 @@ public class Model {
 		
 	}
 	
-	public void cerca(List<PowerOutage> parziale, int Livello) {
+	public void cerca(List<PowerOutage> parziale, int livello) {
 		
 		//calcolo casi terminali:
 		// A) se il tempo totale supera quello indicato su console, esco
@@ -94,7 +94,7 @@ public class Model {
 			return;
 		
 		// C) se arrivo alla fine dell'elenco dei guasti, esco
-		if (Livello == this.daControllare.size())
+		if (livello == this.daControllare.size())
 			return;
 		
 		// COME FACCIO A SAPERE CHE MI POSSO FERMARE CIOE' NON E' COME NEL CASO 
@@ -104,7 +104,20 @@ public class Model {
 		// CHIEDI
 		
 		// D) se la soluzione parziale e' migliore di quella vecchia, sostituisco ed esco
-		if (this.getTotPeopleAffected(parziale) > )
+	//	if (this.getTotPeopleAffected(parziale) > )
+		
+		// algoritmo ricorsivo vero e proprio, copiato da voti nobel, da rivedere
+		
+		//generiamo i sotto-problemi
+		//daControllare[livello] è da aggiungere o no? Provo entrambe le cose
+				
+			//provo ad aggiungerlo
+			parziale.add(daControllare.get(livello));
+			cerca(parziale, livello+1);
+			parziale.remove(daControllare.get(livello));
+				
+			//provo a non aggiungerlo
+			cerca(parziale, livello);
 		
 	}
 
